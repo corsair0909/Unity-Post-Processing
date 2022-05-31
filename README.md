@@ -12,6 +12,10 @@
 Bloom =提取较亮部像素 + 模糊 + 叠加。需要RenderTexture保存临时计算结果。  
 选择高斯正态分布函数对图像进行卷积（高斯模糊是一种方法，效果好但性能较差，）//TODO 尝试替换为均值模糊  
 因其正态分布特性，可以优化为水平+竖直方向两次卷积计算结果的累加
+#### 2、亮度计算公式
+像素亮度取决于RGB三个通道的贡献值  
+L = Color.r * 0.2125 + Color.g * 0.7154 + Color.b * 0.0721
+
 
 ### 参考链接
 [Unity Shader - Bloom(光晕、泛光)](https://developer.unity.cn/projects/5ebca6b0edbc2a00200fb9ef)
