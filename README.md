@@ -28,16 +28,25 @@ L = Color.r * 0.2125 + Color.g * 0.7154 + Color.b * 0.0721
 [Unity Shader - 边缘检测](https://developer.unity.cn/projects/5e5f8620edbc2a04780b586e)
 
 ## [三、运动模糊](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/MotionBlur2.shader)
+
 ### 基于速度缓冲的运动模糊  
+
 ### 效果图
 <img width="987" alt="截屏2022-06-01 16 36 09" src="https://user-images.githubusercontent.com/49482455/171433152-0174697f-0fce-4b49-b085-0617feb6081f.png">
+
 ### 实现思路
+
 C#端中取得当前帧的VP矩阵（相机*投影矩阵）的逆矩阵用于根据NDC坐标计算顶点在世界空间中的坐标    
+
 C#端取得上一帧的VP矩阵用于根据世界空间坐标计算上一帧的NDC坐标  
+
 根据上一帧和当前帧两点之间的位移量计算该点的速度    
+
 对像素周围几个点采样后取平均值（均值模糊）  
+
 ### 参考链接
 [Unity Shader实现运动模糊](https://blog.csdn.net/h5502637/article/details/85002792)
+
 《Unity Shader入门精要》
 
 
