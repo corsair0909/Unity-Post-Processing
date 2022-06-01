@@ -57,7 +57,7 @@ Shader "Unlit/MotionBlur2"
                 float2 Speed = (lastNDCpos.xy - CurNDCpos.xy) * 0.5f;
                 float4 finalColor = float4(0,0,0,1);
                 //得到速度后，对相邻的像素采样后求其平均值得到模糊效果
-                for (int it = 0 ; it<3 ; it++)
+                for (int it = 0 ; it<4 ; it++)
                 {
                     float2 tempUV = i.uv + it * Speed * _BlurSize;
                     finalColor += tex2D(_MainTex,tempUV);

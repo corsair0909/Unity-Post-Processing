@@ -313,9 +313,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: 901c604ca86e94daba2acf09d67f571e, type: 3}
-  EdgeOnly: 1
+  EdgeOnly: 0
   backColor: {r: 1, g: 1, b: 1, a: 1}
-  edgeColor: {r: 0.735849, g: 0.735849, b: 0.735849, a: 1}
+  edgeColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &1435927683
 GameObject:
   m_ObjectHideFlags: 0
