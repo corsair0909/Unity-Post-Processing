@@ -36,7 +36,7 @@ public class Outline : MonoBehaviour
             _material.SetFloat("_EdgeOnly",EdgeOnly);
             _material.SetVector("_BackColor",backColor);
             _material.SetVector("_EdgeColor",edgeColor);
-            Graphics.Blit(src,dest,_material,0);
+            Graphics.Blit(src,dest,_material);
         }
         else
         {
