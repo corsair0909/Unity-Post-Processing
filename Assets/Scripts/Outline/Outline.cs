@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class Outline : MonoBehaviour
+public class Outline : PostEffectsBase
 {
     public Shader shader;
     private Material _material;
@@ -12,15 +12,8 @@ public class Outline : MonoBehaviour
     {
         get
         {
-            if (_material==null)
-            {
-                _material = new Material(shader);
-                return _material;
-            }
-            else
-            {
-                return _material;
-            }
+            _material = CheckShaderAndCreateMaterial(shader, _material);
+            return _material;
         }
     }
 
@@ -31,12 +24,12 @@ public class Outline : MonoBehaviour
 
     private void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        if (_material)
+        if (Material)
         {
-            _material.SetFloat("_EdgeOnly",EdgeOnly);
-            _material.SetVector("_BackColor",backColor);
-            _material.SetVector("_EdgeColor",edgeColor);
-            Graphics.Blit(src,dest,_material);
+            Material.SetFloat("_EdgeOnly",EdgeOnly);
+            Material.SetVector("_BackColor",backColor);
+            Material.SetVector("_EdgeColor",edgeColor);
+            Graphics.Blit(src,dest,Material);
         }
         else
         {

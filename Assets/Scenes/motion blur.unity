@@ -702,6 +702,7 @@ GameObject:
   - component: {fileID: 1917351983}
   - component: {fileID: 1917351982}
   - component: {fileID: 1917351981}
+  - component: {fileID: 1917351984}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -767,10 +768,24 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1917351980}
-  m_LocalRotation: {x: 0, y: -0.021553084, z: 0, w: 0.9997677}
+  m_LocalRotation: {x: 0.0637865, y: 0.00014142598, z: 0.03342531, w: 0.9974037}
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -2.47, z: 0}
+  m_LocalEulerAnglesHint: {x: 7.31, y: 0.263, z: 3.856}
+--- !u!114 &1917351984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917351980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73f0175da028d47cf9c9cdbe96d97b33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 4800000, guid: 80f9224fefbb4449ab97a7e0499d4e3e, type: 3}
+  blurAmount: 1
