@@ -24,8 +24,20 @@ L = Color.r * 0.2125 + Color.g * 0.7154 + Color.b * 0.0721
 #### 2、灰度图  
 计算前需要先将原始图像转化为灰度图，方便比较  
 灰度心理学公式：Gray = Color.r * 0.299 + Color.g * 0.587 + Color.b * 0.0114  
+
+
+### [基于深度法线纹理的边缘检测](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/Outline2.shader)
+<img width="657" alt="截屏2022-06-02 17 02 15" src="https://user-images.githubusercontent.com/49482455/171650106-7eb32459-2c86-4be0-b5e9-c4c1af74bf4e.png">
+
+
+基于深度法线纹理的边缘检测可以解决阴影等不该出现边缘的情况，深度法线纹理中只包含了渲染物品的信息，不会出现阴影部分的信息。使用Roberts算子。  
+Robert算子是一个4x4的卷积核，比较（左上角和右下角的差）乘以（右上角和左下角的差）。  
+<img width="137" alt="截屏2022-06-02 22 22 01" src="https://user-images.githubusercontent.com/49482455/171651558-25d772d2-9710-44e8-9791-56d7b5ccdcfb.png">
+
+
 ### 参考链接
-[Unity Shader - 边缘检测](https://developer.unity.cn/projects/5e5f8620edbc2a04780b586e)
+[Unity Shader - 边缘检测](https://developer.unity.cn/projects/5e5f8620edbc2a04780b586e)  
+《Unity Shader入门精要》
 
 ## [三、运动模糊](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/MotionBlur2.shader)
 
