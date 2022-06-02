@@ -55,7 +55,7 @@ Shader "Unlit/ChromaticAberration"
                 half4 col;
                 half colR = tex2D(_MainTex,i.uv+ float2(_rgbSplit,_rgbSplit) * 0.1 * radius).r;
                 half colG = tex2D(_MainTex,i.uv).g;
-                half colB = tex2D(_MainTex,i.uv + float2(_rgbSplit,_rgbSplit)*0.1 * radius).b;
+                half colB = tex2D(_MainTex,i.uv - float2(_rgbSplit,_rgbSplit)*0.1 * radius).b;
                 col = fixed4(colR,colG,colB,1);
                 return col;
             }
