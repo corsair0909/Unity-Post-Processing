@@ -54,6 +54,19 @@ NDC = (uv,Depth * 2 - 1)
 
 《Unity Shader入门精要》
 
+## [四、色差](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/ChromaticAberration.shader)
+
+### 效果图
+<img width="658" alt="截屏2022-06-02 17 10 12" src="https://user-images.githubusercontent.com/49482455/171648378-c91b60b7-bdf7-4aec-9713-f35f28ed0703.png">
+
+### 实现思路
+对原图的R通道和B通道添加偏移量  
+#### 点积Dot
+两个向量方向相同时，其夹角为0，点积结果为1，也就是说相同向量的点积气结果是向量的平方。  
+> float1的dot(a,b)是a * b，float2的dot(ab,cd)是 (a * c + b * d)。相同向量进行内积计算时，float1的dot(x,x)是x^2 (x平方)，float2的dot(xy,xy)是 x^2 + Y^2(同理float3的dot(xyz,xyz)是 x平方 + y平方 + z平方)。  
+圆的标准方程 ：X^2 + Y^2 = r^2
+上述公式可以得到一个圆，使得色差效果的影响范围是一个圆。
+
 
 
 
