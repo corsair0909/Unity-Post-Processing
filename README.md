@@ -15,13 +15,23 @@ L = Color.r * 0.2125 + Color.g * 0.7154 + Color.b * 0.0721
 ### 参考链接
 [Unity Shader - Bloom(光晕、泛光)](https://developer.unity.cn/projects/5ebca6b0edbc2a00200fb9ef)
 
-## [二、边缘检测](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/Outline.shader).  
+## [二、边缘检测](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/Outline.shader).
+
+
 ### 效果图 
 <img width="986" alt="截屏2022-06-01 16 36 46" src="https://user-images.githubusercontent.com/49482455/171429871-cd7b4444-7f0e-4112-9cc0-55053e2b50cf.png">   
+
+
 ### 实现思路  
 #### 1、卷积运算  
-选择合适的卷积核对图像像素进行计算，Sobel算子是边缘检测中常用的卷积核，卷积结果的值反映了像素块的梯度值，梯度值越大越有可能是边缘。即变化越剧烈，越有可能是边缘  
+
+
+选择合适的卷积核对图像像素进行计算，Sobel算子是边缘检测中常用的卷积核，卷积结果的值反映了像素块的梯度值，梯度值越大越有可能是边缘。即变化越剧烈，越有可能是边缘 
+
+
 #### 2、灰度图  
+
+
 计算前需要先将原始图像转化为灰度图，方便比较  
 灰度心理学公式：Gray = Color.r * 0.299 + Color.g * 0.587 + Color.b * 0.0114  
 
