@@ -6,6 +6,9 @@ Shader "Unlit/Outline2"
     }
     SubShader
     {
+        ZTest Always
+        ZWrite Off
+        Cull Off
         Pass
         {
             CGPROGRAM
