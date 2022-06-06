@@ -89,6 +89,27 @@ NDC = (uv,Depth * 2 - 1)
 圆的标准方程 ：X^2 + Y^2 = r^2
 上述公式可以得到一个圆，使得色差效果的影响范围是一个圆。
 
+## [五、全局雾](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/GlobalFog.shader)  
+### 效果图  
+
+### 实现思路  
+ 基于射线的重建世界坐标的方法。将近裁剪平面的四个角点传递到片元着色器中，片元着色器会进行插值得到其他位置的顶点。worldPos = WorldCameraPos + Depth * Ray（相机到顶点的射线）。    
+
+ halfHeight = near * tan(FOV/2)  
+ ToTop = cam.up * halfHeight    
+ ToRight = cam.right * halfHeight * aspect  
+ TL = cam.forward * near + ToTop - ToRight 以此类推即可求得其他三个角点的位置  
+
+ 以左上角点为例 根据相似三角形：Depth/dist = |TL| / NearClipPanel 。根据上述公式即可求得角点到相机的欧氏距离dist。
+ 其中Depth可由深度纹理采样得出，深度纹理采样的结果并不是角点到相机的欧式距离，而是角点再Z轴方向的距离。
+ #### 雾因子计算  
+ 根据重建后的世界位置坐标的高度Y分量计算雾因子，再与雾系数相乘后得到雾强度因子，再源图和雾颜色直接过度。
+ 
+ ### 参考链接  
+ 《Shader入门精要》  
+  
+
+
 
 
 
