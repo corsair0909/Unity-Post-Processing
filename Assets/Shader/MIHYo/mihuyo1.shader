@@ -20,6 +20,8 @@ Shader "Custom/TVDistortion"
 	{
 		Pass
 		{
+			//图片总是会通过深度测试但不写入深度缓冲
+			//确保图片一定会显示在最上方
 			ZTest Always Cull Off ZWrite Off
 			CGPROGRAM
 			#pragma vertex vert
@@ -37,8 +39,8 @@ Shader "Custom/TVDistortion"
 			{
 				float4 uv : TEXCOORD0;
 				//float4 Color : COLOR;
-				float4 Distortion_UV : TEXCOORD1;
-				float4 Noise_UV : TEXCOORD2;
+				float4 Distortion_UV : TEXCOORD1;//扭曲贴图UV
+				float4 Noise_UV : TEXCOORD2;//噪音贴图UV
 				UNITY_FOG_COORDS(1)
 				float4 vertex : SV_POSITION;
 			};
@@ -72,6 +74,7 @@ Shader "Custom/TVDistortion"
  
 			//噪音图UV
 			float2 noiseUV = TRANSFORM_TEX(v.uv, _NoiseTex);
+			//噪音计算公式
 			float3 noise1 = frac((sin((_SinTime.w * float3(12.9898, 78.233, 45.5432))) * 43758.55));
 			float3 noise2 = frac((sin((_CosTime.x * float3(12.9898, 78.233, 45.5432))) * 43758.55));
 			noiseUV.x = (noiseUV.x + ((noise1.x + noise2.x) * _NoiseAnmSpeed));
@@ -91,8 +94,10 @@ Shader "Custom/TVDistortion"
 			float4 color;
 			color.yz = float2(0.0, 0.0);
 			//获取扭曲图的偏移位置
-			half offset = (tex2D(_DistortionTex, i.Distortion_UV.xy) - 0.498).x * _DistortionAmplitude;
-			//颜色偏移强度（左右）
+			//减去0.498是为了防止图片被扭曲超出范围
+			//对UV进行扭曲
+			half offset = (tex2D(_DistortionTex, i.Distortion_UV.xy) -0.498 ).x * _DistortionAmplitude;
+			//颜色偏移强度（左右），偏移颜色通道
 			float2 ColorStrength = float2(_ColorScatterStrength, 0.0);
 			//红色偏移
 			float4 redOffset = tex2D(_MainTex, ((i.uv.xy + offset) + ColorStrength));
