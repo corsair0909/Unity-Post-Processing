@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: c018c81564f724d8c88737ad8230c4dd, type: 3}
-  rgbSplit: 0.185
+  rgbSplit: 0.5
 --- !u!1 &401584552
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,51 +6,73 @@ Shader "Unlit/GlobalFog"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
-
         Pass
         {
+            ZTest Always
+            ZWrite Off
+            Cull Off
+            
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
-
             #include "UnityCG.cginc"
-
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
 
             struct v2f
             {
                 float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
+                float2 depthUV : TEXCOORD1;
                 float4 vertex : SV_POSITION;
+                float4 Ray : TEXCOORD2;
             };
 
             sampler2D _MainTex;
-            float4 _MainTex_ST;
+            sampler2D _CameraDepthTexture;
+            half4 _fogColor;
+            fixed _fogStart;
+            fixed _forEnd;
+            fixed _Density;
+            float4x4 _furstum;
+            float4 _MainTex_TexelSize;
 
-            v2f vert (appdata v)
+            v2f vert (appdata_img v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
+                o.uv = v.texcoord;
+                o.depthUV = v.texcoord;
+                
+                fixed index = 0;
+                if (v.texcoord.x < 0 && v.texcoord.y > 0)
+                {
+                    index = 0;
+                }
+                else if(v.texcoord.x > 0 && v.texcoord.y > 0)
+                {
+                    index = 1;
+                }
+                else if(v.texcoord.x < 0 && v.texcoord.y < 0)
+                {
+                    index = 2;
+                }
+                else if (v.texcoord.x > 0 && v.texcoord.y < 0)
+                {
+                    index = 3;
+                }
+                o.Ray = _furstum[index];
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // sample the texture
+                float3 linearDepth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture,i.depthUV));
+                float3 worldPos = _WorldSpaceCameraPos + linearDepth * i.Ray.xyz;
+
+                float fogDensity = (_forEnd - worldPos.y)/(_forEnd - _fogStart);
+                fogDensity = saturate(fogDensity * _Density);
+                
                 fixed4 col = tex2D(_MainTex, i.uv);
-                // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, col);
-                return col;
+                fixed4 finalColor = lerp(col,_fogColor,fogDensity);
+                return finalColor;
             }
             ENDCG
         }
