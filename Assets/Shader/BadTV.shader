@@ -28,7 +28,9 @@ Shader "Unlit/BadTV"
             float2 _VerticalJump;
             fixed _HorizontalShake;
             float2 _ColorDrift;
-            //周期函数，根据传入的x和y构造一个频率足够高的周期函数用来模拟抖动的周期性
+            
+            //计算噪音公式
+            //根据传入的x和y构造一个频率足够高的周期函数用来模拟抖动的周期性
             float nrand(float x, float y)
             {
                 return frac(sin(dot(float2(x, y), float2(12.9898, 78.233))) * 43758.5453);
@@ -51,7 +53,7 @@ Shader "Unlit/BadTV"
                 jitter *= step(_ScanLineJitter.y,abs(jitter))*_ScanLineJitter.x;
 
                 //VerticalJump其中x分量是时间，y分量是强度
-                float jump = lerp(v,frac(v+_VerticalJump.x),_VerticalJump.y);
+                float jump = lerp(v,frac(v+_VerticalJump.y),_VerticalJump.x);
                 float shake = (nrand(_Time.x, 2) - 0.5) * _HorizontalShake;
                 //y分量是时间，x分量是强度
                 float dirft = sin(jump+_ColorDrift.y)*_ColorDrift.x;

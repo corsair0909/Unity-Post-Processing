@@ -314,9 +314,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: 512f07e93f03f4e03bd04af9c82c474a, type: 3}
   scanLineShake: 0.02
-  vertivalShake: 0.05
-  horizontalShake: 0.05
-  colorDirft: 0.09
+  vertivalShake: 0.006
+  horizontalShake: 0.041
+  colorDirft: 0.024
 --- !u!1 &1585728686
 GameObject:
   m_ObjectHideFlags: 0

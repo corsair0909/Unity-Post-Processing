@@ -24,8 +24,8 @@ public class BadTV : MonoBehaviour
     }
     
     //扫描线抖动
-    [Range(0.0f,1.0f)]
-    public float scanLineShake = 0;
+    [Range(0,1)]
+    public float scanLineShake = 0.02f;
     //竖直方向抖动
     [Range(0.0f,1.0f)]
     public float vertivalShake = 0;
@@ -43,7 +43,7 @@ public class BadTV : MonoBehaviour
         {
             verticalShakeTime = Time.deltaTime * vertivalShake * 11.3f; //经验值
             //扫描线抖动设置
-            var sl_thresh = Mathf.Clamp01(1.0f - scanLineShake * 1.2f);
+            var sl_thresh = Mathf.Clamp01(1.0f - scanLineShake * 1.2f);//阈值
             var sl_disp = 0.002f + Mathf.Pow(scanLineShake, 3) * 0.05f;
             Mate.SetVector("_ScanLineJitter", new Vector2(sl_disp, sl_thresh));
 
