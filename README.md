@@ -91,6 +91,7 @@ NDC = (uv,Depth * 2 - 1)
 
 ## [五、全局雾](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/GlobalFog.shader)  
 ### 效果图  
+<img width="668" alt="截屏2022-06-06 09 50 37" src="https://user-images.githubusercontent.com/49482455/172373466-8be5b0f1-75e8-4e13-b53c-13ebfdd64c8b.png">
 
 ### 实现思路  
  基于射线的重建世界坐标的方法。将近裁剪平面的四个角点传递到片元着色器中，片元着色器会进行插值得到其他位置的顶点。worldPos = WorldCameraPos + Depth * Ray（相机到顶点的射线）。    
@@ -107,7 +108,8 @@ NDC = (uv,Depth * 2 - 1)
  
  ### 参考链接  
  《Shader入门精要》  
-  
+ 
+
 
 
 
