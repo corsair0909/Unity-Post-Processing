@@ -9,7 +9,7 @@
 Bloom =提取较亮部像素 + 模糊 + 叠加。需要RenderTexture保存临时计算结果。  
 选择高斯正态分布函数对图像进行卷积（高斯模糊是一种方法，效果好但性能较差，）//TODO 尝试替换为均值模糊  
 因其正态分布特性，可以优化为水平+竖直方向两次卷积计算结果的累加
-#### 2、亮度计算公式
+#### 2、计算公式
 像素亮度取决于RGB三个通道的贡献值  
 L = Color.r * 0.2125 + Color.g * 0.7154 + Color.b * 0.0721
 ### 参考链接
@@ -109,8 +109,27 @@ NDC = (uv,Depth * 2 - 1)
  ### 参考链接  
  《Shader入门精要》  
  
+## [基于屏幕后处理的故障效果](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/BadTV.shader)
+### 效果图  
+![QQ20220609-110514-HD](https://user-images.githubusercontent.com/49482455/172755611-33097489-0534-417b-a9ed-ae28c802fcc5.gif)
 
-
+### 实现思路  
+故障效果在水平方向上使用噪音，竖直方向上进行抖动，以及通道分离效果.   
+1、噪音计算公式：frac(sin(X * float2(12.9898, 78.233))*43758.5453).     
+2、抖动方向：故障效果在水平和竖直方向上均有抖动，在C#端分别设置抖动强度和抖动瓶频率传入着色器，竖直方向的抖动可将uv在该方向上根据时间偏移。水平方向上计算噪音.   
+3、通道偏移：计算好通道偏移量后在对需要分离的通道加上偏移.   
+4、噪音拉伸： step函数截断在0-阈值之间值，乘上拉伸强度.     
+### 崩坏三信号干扰。  
+![信号干扰](https://user-images.githubusercontent.com/49482455/172756133-fc3d3b0d-87b1-4394-8985-9fb3985c394d.gif)
+#### 思路。  
+1、扭曲：根据参数在uv的连个分量上计算扭曲程度，合成distortUV。      
+2、白噪音计算：噪音uv的两个分量上分别计算两次噪音，然后合成NoiseUV    
+3、通道偏移：分别计算rgb通道的值，对其中的通道增加偏移量    
+### 参考链接        
+[Unity信号干扰Shader](https://blog.csdn.net/SnoopyNa2Co3/article/details/84673736).   
+[Unity信号干扰shader（参照崩坏3源码翻译剧情对话效果）](https://blog.csdn.net/SnoopyNa2Co3/article/details/86629436).   
+[大佬的github](https://github.com/csdjk/LearnUnityShader).  
+[Unity缓动函数Lerp](https://www.cnblogs.com/louissong/p/3204447.html)
 
 
 
