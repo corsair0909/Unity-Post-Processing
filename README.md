@@ -129,7 +129,16 @@ NDC = (uv,Depth * 2 - 1)
 [Unity信号干扰Shader](https://blog.csdn.net/SnoopyNa2Co3/article/details/84673736).   
 [Unity信号干扰shader（参照崩坏3源码翻译剧情对话效果）](https://blog.csdn.net/SnoopyNa2Co3/article/details/86629436).   
 [大佬的github](https://github.com/csdjk/LearnUnityShader).  
-[Unity缓动函数Lerp](https://www.cnblogs.com/louissong/p/3204447.html)
+[Unity缓动函数Lerp](https://www.cnblogs.com/louissong/p/3204447.html)    
+
+## [场景深度扫描](https://github.com/corsair0909/Unity-Post-Processing/tree/main/Assets/Scripts/DepthScan).   
+
+### 实现思路    
+采样深度贴图并将其转换为线性深度，用于和深度控制值比较，符合条件的深度（深度大于当前值，当前值+扫描线宽度值）的位置着色为扫描线颜色。  
+<img width="1311" alt="截屏2022-06-13 17 28 10" src="https://user-images.githubusercontent.com/49482455/173323598-92c5969a-b74b-45e8-a8da-3d8405f4eec4.png">
+
+
+
 
 
 
