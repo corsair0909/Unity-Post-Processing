@@ -137,7 +137,16 @@ NDC = (uv,Depth * 2 - 1)
 采样深度贴图并将其转换为线性深度，用于和深度控制值比较，符合条件的深度（深度大于当前值，当前值+扫描线宽度值）的位置着色为扫描线颜色。  
 <img width="1311" alt="截屏2022-06-13 17 28 10" src="https://user-images.githubusercontent.com/49482455/173323598-92c5969a-b74b-45e8-a8da-3d8405f4eec4.png">
 
+## [波浪](https://github.com/corsair0909/Unity-Post-Processing/tree/main/Assets/Shader/Wave)
+### 效果图
+![QQ20220614-145233-HD](https://user-images.githubusercontent.com/49482455/173618529-782f1047-2e6a-4cbe-8885-ef68e9411e4b.gif)
 
+### 实现思路    
+1、波浪属性：波浪的几种属性分别为波浪速度、波浪开始时间，当前距离、波浪宽度。    
+开始时间=鼠标按下的时间，波浪距离 = 速度*时间
+2、正弦波属性：使用正弦函数得到正弦波形，距离影响因子、时间影响因子、正弦波影响因子分别用于在单位距离内获得更多的波形、单位时间内获得更多波形、整体更多波形。   
+3、波浪影响位置计算图下图所示，求出所有uv坐标点距离开始点的距离（插值得到所有uv坐标，勾股定理求的距离），当前距离-uv距离<波浪宽度说明要收到波浪影响，
+![IMG_1147](https://user-images.githubusercontent.com/49482455/173620449-dd525536-ebac-43bf-8cbf-acadb79ad0d4.png)
 
 
 
