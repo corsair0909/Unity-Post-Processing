@@ -37,6 +37,16 @@ public class BadTV : MonoBehaviour
     public float colorDirft = 0;
 
     private float verticalShakeTime;
+
+    private void Update()
+    {
+        vertivalShake = Mathf.Lerp(vertivalShake, 1, Time.deltaTime);
+        if (vertivalShake>0.9f)
+        {
+            vertivalShake = 0;
+        }
+    }
+
     private void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
         if (Mate)

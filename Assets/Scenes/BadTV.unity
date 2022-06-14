@@ -322,6 +322,7 @@ GameObject:
   - component: {fileID: 1410566460}
   - component: {fileID: 1410566459}
   - component: {fileID: 1410566458}
+  - component: {fileID: 1410566461}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -388,12 +389,29 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1410566457}
   m_LocalRotation: {x: -0.0018098652, y: 0.0050974283, z: -0.000009013573, w: -0.9999854}
-  m_LocalPosition: {x: 0.71928436, y: 0.20846415, z: -32.3954}
+  m_LocalPosition: {x: 0.68, y: 0.19, z: -28.31}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1410566461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410566457}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 428b3388a32a74f189a8ec0e6c59dbe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 4800000, guid: 512f07e93f03f4e03bd04af9c82c474a, type: 3}
+  scanLineShake: 0.2
+  vertivalShake: 0.33333334
+  horizontalShake: 0.17
+  colorDirft: 0.03
 --- !u!1 &1585728686
 GameObject:
   m_ObjectHideFlags: 0
