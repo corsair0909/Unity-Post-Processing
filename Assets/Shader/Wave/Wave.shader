@@ -6,51 +6,49 @@ Shader "Unlit/Wave"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
+        Cull Off
+        ZTest Always
+        ZWrite Off
 
         Pass
         {
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
-
             #include "UnityCG.cginc"
-
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
             struct v2f
             {
                 float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
-
-            v2f vert (appdata v)
+            fixed _DisFactor;
+            fixed _TimeFactor;
+            fixed _SinFactor;
+            fixed _WaveWidth;
+            fixed _WaveSpeed;
+            fixed _CurWaveDis;
+            float4 _startPos;
+            v2f vert (appdata_img v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
+                o.uv = v.texcoord;
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
-                // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, col);
-                return col;
+                float2 dv = _startPos.xy - i.uv; //波浪运动方向的向量
+                dv = dv * float2(_ScreenParams.x/_ScreenParams.y,1);//按照屏幕长宽比进行缩放
+                float dis = sqrt(dv.x*dv.x + dv.y*dv.y);
+                float sinFactor = sin(dis * _DisFactor + _Time.y * _TimeFactor) * _SinFactor * 0.01;
+                float disFactor = clamp(_WaveWidth - abs(_CurWaveDis-dis),0,1);//小于波形的部分不发生变化
+                float offset = normalize(dv) * sinFactor * disFactor;
+                i.uv += offset;
+                return tex2D(_MainTex,i.uv);
             }
             ENDCG
         }
