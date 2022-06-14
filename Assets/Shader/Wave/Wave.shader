@@ -45,6 +45,8 @@ Shader "Unlit/Wave"
                 dv = dv * float2(_ScreenParams.x/_ScreenParams.y,1);//按照屏幕长宽比进行缩放
                 float dis = sqrt(dv.x*dv.x + dv.y*dv.y);
                 float sinFactor = sin(dis * _DisFactor + _Time.y * _TimeFactor) * _SinFactor * 0.01;
+                //当前波浪距离 - dis = 可以理解为波浪宽度 ，若结果小于指定宽度说明该位置需要收到波浪影响，距离因子等于1，否则距离因子等于0
+                //偏移量也就等于0
                 float disFactor = clamp(_WaveWidth - abs(_CurWaveDis-dis),0,1);//小于波形的部分不发生变化
                 float offset = normalize(dv) * sinFactor * disFactor;
                 i.uv += offset;
