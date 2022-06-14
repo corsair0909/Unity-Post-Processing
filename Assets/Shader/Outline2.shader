@@ -51,16 +51,16 @@ Shader "Unlit/Outline2"
                 o.uv[4] = uv + _MainTex_TexelSize.xy * float2(1,-1) * _SampleDistance;
                 return o;
             }
-
+            //计算左上角和右下角的差乘以左下角和右上角的差
             fixed CheckSample(float4 sample1 , float4 sample2)
             {
                 float2 NormalVal1 = sample1.xy;
                 float DepthVal1 = DecodeFloatRG(sample1.zw);
                 float2 NormalVal2 = sample2.xy;
                 float DepthVal2 = DecodeFloatRG(sample2.zw);
-
+                //计算差值并乘以灵明度参数，灵敏度参数用于控制对边缘的检测灵敏度，越大越浅的边缘会被检测到
                 float2 isNormals = abs(NormalVal1 - NormalVal2)* _Sensitivity.y;
-                int Normals = (isNormals.x + isNormals.y) < _TheShold;
+                int Normals = (isNormals.x + isNormals.y) < _TheShold;//结果与阈值进行比较，小于阈值返回1说明不存在边缘，大于返回0
                 float isDepth = abs(DepthVal1 - DepthVal2) * _Sensitivity.x;
                 int Depth = isDepth < _TheShold;
 
