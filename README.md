@@ -23,28 +23,17 @@ L = Color.r * 0.2125 + Color.g * 0.7154 + Color.b * 0.0721
 
 
 ### 实现思路  
-#### 1、卷积运算  
-
-
-选择合适的卷积核对图像像素进行计算，Sobel算子是边缘检测中常用的卷积核，卷积结果的值反映了像素块的梯度值，梯度值越大越有可能是边缘。即变化越剧烈，越有可能是边缘 
-
-
-#### 2、灰度图  
-
-
+#### 1、卷积运算      
+如果一张图像的相邻像素之间存在比较明显的亮度/颜色差异，我们就认为像素之间存在一条边缘线，相邻像素之间的差值称之为梯度。      
+选择合适的卷积核对图像像素进行计算，Sobel算子是边缘检测中常用的卷积核。卷积结果的值反映了像素块的梯度值，梯度值越大越有可能是边缘。即变化越剧烈，越有可能是边缘     
+#### 2、灰度图      
 计算前需要先将原始图像转化为灰度图，方便比较  
-灰度心理学公式：Gray = Color.r * 0.299 + Color.g * 0.587 + Color.b * 0.0114  
-
-
+灰度心理学公式：Gray = Color.r * 0.299 + Color.g * 0.587 + Color.b * 0.0114       
 ### [基于深度法线纹理的边缘检测](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/Outline2.shader)
-<img width="657" alt="截屏2022-06-02 17 02 15" src="https://user-images.githubusercontent.com/49482455/171650106-7eb32459-2c86-4be0-b5e9-c4c1af74bf4e.png">
-
-
+<img width="657" alt="截屏2022-06-02 17 02 15" src="https://user-images.githubusercontent.com/49482455/171650106-7eb32459-2c86-4be0-b5e9-c4c1af74bf4e.png">     
 基于深度法线纹理的边缘检测可以解决阴影等不该出现边缘的情况，深度法线纹理中只包含了渲染物品的信息，不会出现阴影部分的信息。使用Roberts算子。  
 Robert算子是一个4x4的卷积核，比较（左上角和右下角的差）乘以（右上角和左下角的差）。  
-<img width="137" alt="截屏2022-06-02 22 22 01" src="https://user-images.githubusercontent.com/49482455/171651558-25d772d2-9710-44e8-9791-56d7b5ccdcfb.png">
-
-
+<img width="137" alt="截屏2022-06-02 22 22 01" src="https://user-images.githubusercontent.com/49482455/171651558-25d772d2-9710-44e8-9791-56d7b5ccdcfb.png">     
 ### 参考链接
 [Unity Shader - 边缘检测](https://developer.unity.cn/projects/5e5f8620edbc2a04780b586e)  
 《Unity Shader入门精要》
@@ -54,7 +43,8 @@ Robert算子是一个4x4的卷积核，比较（左上角和右下角的差）�
 ### 基于速度缓冲的运动模糊  
 
 ### 效果图
-<img width="987" alt="截屏2022-06-01 16 36 09" src="https://user-images.githubusercontent.com/49482455/171433152-0174697f-0fce-4b49-b085-0617feb6081f.png">  
+![QQ20220616-113202-HD](https://user-images.githubusercontent.com/49482455/174082409-03033e34-aad1-455e-80b3-ebf7efd602f0.gif)
+
 
 ### 实现思路
 
@@ -148,7 +138,28 @@ NDC = (uv,Depth * 2 - 1)
 3、波浪影响位置计算图下图所示，求出所有uv坐标点距离开始点的距离（插值得到所有uv坐标，勾股定理求的距离），当前距离-uv距离<波浪宽度说明要收到波浪影响，
 ![IMG_1147](https://user-images.githubusercontent.com/49482455/173620449-dd525536-ebac-43bf-8cbf-acadb79ad0d4.png)
 
+## SSAO(还有bug，正在学习修改)
+> 通过将褶皱、孔洞和非常靠近的墙面变暗的方法近似模拟出间接光照。这些区域很大程度上是被周围的几何体遮蔽的，光线会很难流入，所以这些地方看起来会更暗一些     
+### SSAO算法实现思路    
+#### 计算AO    
+> AO值反映了该点反射出去的光被周围集合体遮挡住的比例，AO越大越暗，以下计算都在视角空间完成，视角空间下位置由深度反推出来 
 
 
-
+1、首先采样深度法线贴图得到场景中顶点的深度值和法线方向。    
+2、通过获得的深度反推出点在视角空间下的位置。    
+3、利用法线在每个顶点得到法线方向半球。    
+4、在法线半球内设置随机采样点。    
+5、求出每个采样点的屏幕空间坐标，然后求出采样点的深度，与顶点深度比较，若深度大于顶点深度，则认为该采样点方向的光线被遮挡。得到的值加权到AO中。    
+下图中，深色的采样点就是被遮挡的点。    
+<img width="559" alt="截屏2022-06-16 21 46 30" src="https://user-images.githubusercontent.com/49482455/174086596-4528bc2b-90da-4f50-a1ea-11f78eebb286.png">     
+#### 模糊  
+高斯模糊或均值模糊均可，本例中采用均值模糊      
+#### 合并图像               
+AO图与源图混合完成SSAO                      
+### 参考链接       
+[百人计划 4.2 SSAO算法](https://blog.csdn.net/m0_37686228/article/details/121080869).          
+[Unity Shader-Ambient Occlusion环境光遮蔽](https://blog.csdn.net/puppet_master/article/details/82929708).          
+[游戏后期特效第四发 -- 屏幕空间环境光遮蔽(SSAO)](https://zhuanlan.zhihu.com/p/25038820).         
+[Unity从深度缓冲中重建世界位置](https://zhuanlan.zhihu.com/p/92315967).           
+[环境遮罩之SSAO原理](https://zhuanlan.zhihu.com/p/46633896).      
 
