@@ -60,7 +60,7 @@ public class MotionBlurFromDepth : MonoBehaviour
             Material.SetMatrix("_PreVpMatrix",preViewProjectionMatrix4X4);
             Matrix4x4 currentVPMatrix = Camera.projectionMatrix * Camera.worldToCameraMatrix;//当前的VP矩阵
             Matrix4x4 currentInverseVpMatrix4X4 = currentVPMatrix.inverse;
-            Material.SetMatrix("CurInverseVPMatrix",currentInverseVpMatrix4X4);
+            Material.SetMatrix("_CurInverseVPMatrix",currentInverseVpMatrix4X4);
             //保存当前帧的VP矩阵，在新一帧开始时传递给着色器
             //也就是相对于新一帧来说，上一帧的VP矩阵
             preViewProjectionMatrix4X4 = currentVPMatrix;
