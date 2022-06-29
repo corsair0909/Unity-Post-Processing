@@ -16,6 +16,7 @@ Shader "Unlit/Bloom2"
             fixed4 _BloomColor;
             fixed _Fractor; 
             fixed _blurSize;
+            fixed _Lum;
             // ------------------------------提取亮度像素---------------------------
             struct v2f
             {
@@ -105,7 +106,40 @@ Shader "Unlit/Bloom2"
                 float4 finalColor = mainColor + blurColor * _Fractor * _BloomColor;
                 return finalColor;
             }
+            struct v2fToneMapping
+            {
+                float4 pos : SV_POSITION;
+                float4 uv : TEXCOORD0;
 
+            };     
+            v2fToneMapping ACESToneMappingVert(appdata_img v) 
+            {
+                v2fToneMapping o;
+                o.pos = UnityObjectToClipPos(v.vertex);
+                o.uv.xy = v.texcoord;
+                return o;
+            }
+            float3 CEToneMapping(float3 color, float adapted_lum) 
+            {
+                return 1 - exp(-adapted_lum * color);
+            }
+            float3 ACESToneMapping(float3 color,float Lum)
+            {
+                const float A = 2.51f;
+                const float B = 0.03f;
+                const float C = 2.43f;
+                const float D = 0.59f;
+                const float E = 0.14f;
+                color *= Lum;
+                return (color * (A * color + B)) / (color * (C * color + D) + E);
+            }
+            fixed4 ACESToneMappingFrag(v2fToneMapping v):SV_Target
+            {
+                fixed3 var_MainTex = tex2D(_MainTex,v.uv.xy).rgb;
+                var_MainTex = ACESToneMapping(var_MainTex,_Lum);
+                fixed3 var_BloomTex = tex2D(_blurTex,v.uv).rgb;
+                return fixed4(var_MainTex+var_BloomTex,1);
+            }
 
         ENDCG
 
@@ -139,6 +173,13 @@ Shader "Unlit/Bloom2"
             #pragma vertex BloomVert
             #pragma fragment BloomFrag
 
+            ENDCG
+        }
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex ACESToneMappingVert
+            #pragma fragment ACESToneMappingFrag
             ENDCG
         }
     }

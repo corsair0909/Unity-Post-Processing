@@ -58,7 +58,7 @@ public class SSAO : MonoBehaviour
     public int blurRadius = 1;
 
     public float BilaterFilterFactor = 0;
-
+    public float randomBias;
 
     public bool isOnlyAO;
     enum PassName
@@ -104,6 +104,7 @@ public class SSAO : MonoBehaviour
             Mate.SetFloat("_sampleKernelCount",sampleKernelCount);
             Mate.SetVectorArray("_sampleKernelPosList",sampleKernelPosList.ToArray());
             Mate.SetFloat("_AOStrength",AOStrength);
+            Mate.SetFloat("_randomBias",randomBias);
             Mate.SetFloat("_BilaterFilterFactor",BilaterFilterFactor);
             Mate.SetMatrix("_InverseProjectMatrix",Cam.projectionMatrix.inverse);
             RenderTexture AOTex = RenderTexture.GetTemporary(Screen.width/dowmSample,Screen.height/dowmSample);
