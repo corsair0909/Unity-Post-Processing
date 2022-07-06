@@ -6,52 +6,106 @@ Shader "Unlit/Outline3"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
-
-        Pass
-        {
-            CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
-
+        CGINCLUDE
             #include "UnityCG.cginc"
-
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
+                float2 uv[5] : TEXCOORD0;
                 float4 vertex : SV_POSITION;
             };
 
             sampler2D _MainTex;
-            float4 _MainTex_ST;
+            float4 _MainTex_TexelSize;
+            
+            sampler2D _BlurTex;
+            sampler2D _SrcTex;
 
-            v2f vert (appdata v)
+            fixed _BlurSize;
+            fixed4 _OutlineColor;
+            fixed _outlinePower;
+
+            v2f Horizontalvert (appdata_img v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
+                o.uv[0] = v.texcoord;
+                o.uv[1] = v.texcoord + float2(0.0f,_MainTex_TexelSize.y * 1.0f) * _BlurSize;
+                o.uv[2] = v.texcoord - float2(0.0f,_MainTex_TexelSize.y * 1.0f) * _BlurSize;
+                o.uv[3] = v.texcoord + float2(0.0f,_MainTex_TexelSize.y * 2.0f) * _BlurSize;
+                o.uv[4] = v.texcoord - float2(0.0f,_MainTex_TexelSize.y * 2.0f) * _BlurSize;
                 return o;
             }
-
-            fixed4 frag (v2f i) : SV_Target
+        
+            v2f Verticalvert (appdata_img v)
             {
-                // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
-                // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, col);
-                return col;
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv[0] = v.texcoord;
+                o.uv[1] = v.texcoord + float2(_MainTex_TexelSize.x * 1.0f,0.0f) * _BlurSize;
+                o.uv[2] = v.texcoord - float2(_MainTex_TexelSize.x * 1.0f,0.0f) * _BlurSize;
+                o.uv[3] = v.texcoord + float2(_MainTex_TexelSize.x * 1.0f,0.0f) * _BlurSize;
+                o.uv[4] = v.texcoord - float2(_MainTex_TexelSize.x * 1.0f,0.0f) * _BlurSize;
+                return o;
             }
+        
+            fixed4 Frag (v2f i) : SV_Target
+            {
+                fixed weight[3] = {0.4026, 0.2442, 0.0545};
+                fixed3 sum  = tex2D(_MainTex,i.uv[0]).rgb * weight[0];
+                for (int it = 1; it < 3; it++)
+                {
+                    sum += tex2D(_MainTex,i.uv[it*2-1]).rgb * weight[it];
+                    sum += tex2D(_MainTex,i.uv[it*2]).rgb * weight[it];
+                }
+                return fixed4(sum,1.0f);
+            }
+
+            struct v2f_Cull
+            {
+                float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
+            };
+        
+            v2f_Cull CullVert (appdata_img v)
+            {
+                v2f_Cull o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = v.texcoord;
+                return o;
+            }
+            fixed4 CullFrag (v2f_Cull i) : SV_Target
+            {
+                fixed4 MainTex = tex2D(_MainTex, i.uv);
+                fixed4 BlurTex = tex2D(_BlurTex, i.uv);
+                fixed4 SrcTex = tex2D(_SrcTex, i.uv);
+
+                fixed4 outlineColor = (BlurTex - SrcTex) * _OutlineColor * _outlinePower;
+                fixed4 finalColor = saturate(outlineColor) + MainTex;
+                return finalColor;
+            }
+        ENDCG
+
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex Horizontalvert
+            #pragma fragment Frag
+            ENDCG
+        }
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex Verticalvert
+            #pragma fragment Frag
+            ENDCG
+        }
+
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex CullVert
+            #pragma fragment CullFrag
             ENDCG
         }
     }

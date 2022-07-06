@@ -70,7 +70,7 @@ public class Bloom2 : MonoBehaviour
         }
         RenderTexture ToneMappint = RenderTexture.GetTemporary(rtW,rtH,0);
         Mat.SetTexture("_blurTex",buffer0);
-        Graphics.Blit(buffer0,ToneMappint,Mat,3);
+        Graphics.Blit(buffer0,dest,Mat,3);
         RenderTexture.ReleaseTemporary(buffer0);
         Mat.SetFloat("_Lum",lum);
         Graphics.Blit(ToneMappint,dest,Mat,4);

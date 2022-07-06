@@ -316,10 +316,11 @@ MonoBehaviour:
   Shader: {fileID: 4800000, guid: cf808865f0ff3443d9d42cc759333d3a, type: 3}
   interation: 1
   downSample: 2
-  Threshold: -0.08
-  blurSpread: 1
-  color: {r: 0.27058825, g: 0.3254902, b: 0.34901962, a: 1}
-  BloomFractor: 0.12
+  Threshold: -0.06
+  blurSpread: 0.306
+  color: {r: 0, g: 0.6999998, b: 1, a: 1}
+  BloomFractor: 1.17
+  lum: 0.069
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
