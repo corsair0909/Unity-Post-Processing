@@ -76,10 +76,10 @@ Shader "Unlit/Outline3"
             }
             fixed4 CullFrag (v2f_Cull i) : SV_Target
             {
-                fixed4 MainTex = tex2D(_MainTex, i.uv);
-                fixed4 BlurTex = tex2D(_BlurTex, i.uv);
-                fixed4 SrcTex = tex2D(_SrcTex, i.uv);
-
+                fixed4 MainTex = tex2D(_MainTex, i.uv);//原图
+                fixed4 BlurTex = tex2D(_BlurTex, i.uv);//模糊图
+                fixed4 SrcTex = tex2D(_SrcTex, i.uv);//rendertexture图
+                //模糊图-rendertexture = 模糊膨胀出来的部分（描边）
                 fixed4 outlineColor = (BlurTex - SrcTex) * _OutlineColor * _outlinePower;
                 fixed4 finalColor = saturate(outlineColor) + MainTex;
                 return finalColor;
