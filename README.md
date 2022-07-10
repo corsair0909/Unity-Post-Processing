@@ -38,6 +38,16 @@ Robert算子是一个4x4的卷积核，比较（左上角和右下角的差）�
 [Unity Shader - 边缘检测](https://developer.unity.cn/projects/5e5f8620edbc2a04780b586e)  
 《Unity Shader入门精要》
 
+
+
+### 后处理描边
+
+先将图片模糊（本例使用高斯模糊算法）。模糊后的图像需要描边的部位会发生膨胀。然后用一个返回纯色的shader渲染画面保存到RenderTexture上。模糊图-RenderTexture = 膨胀部分（边缘）。
+
+<img width="337" alt="截屏2022-07-06 12 35 15" src="https://user-images.githubusercontent.com/49482455/178142392-e4b2595c-5a9d-4f75-8fe5-44c938181762.png">
+
+
+
 ## [三、运动模糊](https://github.com/corsair0909/Unity-Post-Processing/blob/main/Assets/Shader/MotionBlur2.shader)
 
 ### 基于速度缓冲的运动模糊  
