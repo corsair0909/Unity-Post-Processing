@@ -7,129 +7,63 @@ using Random = UnityEngine.Random;
 [ExecuteInEditMode]
 public class SSAO : MonoBehaviour
 {
-    public Shader shader;
+    public Shader aoShader;
+
+    private Material aoMat;
+    private Material blurMat;
+
+    //public Camera Camera;
+
+    [Range(0, 128)] public int samplerCount = 20;
+    [Range(0.2f, 5)] public float aoRadius = 0.2f;
+    [Range(0.2f, 10)] public float aoStrange = 0.2f;
+    public Color aoColor = Color.black;
+    public bool aoOnly = false;
     
-    private Material _material;
-    public Material Mate
+    [Range(1,4)]
+    public int dowmSample = 1;
+    [Range(1, 5)] public int iterator = 2;
+    [Range(0.2f, 10)] public float BlurSp = 2;
+    
+    private void Awake()
     {
-        get
-        {
-            if (_material==null)
-            {
-                _material = new Material(shader);
-                return _material;
-            }
-            else
-            {
-                return _material;
-            }
-        }
-    }
-
-    private Camera _camera;
-    public Camera Cam
-    {
-        get
-        {
-            if (_camera==null)
-            {
-                _camera = GetComponent<Camera>();
-                return _camera;
-            }
-            else
-            {
-                return _camera;
-            }
-        }
-        
-    }
-
-    public List<Vector4> sampleKernelPosList = new List<Vector4>();
-
-    [Range(0.01f,1.0f)] //半球半径
-    public float sampleKernelRadius = 1;
-    [Range(4,32)]//半球内采样点数
-    public int sampleKernelCount = 16;
-    [Range(0.0f,5.0f)]//AO强度
-    public float AOStrength = 1;
-    [Range(0, 2)] //下采样
-    public int dowmSample = 2;
-    [Range(1,4)] //模糊系数
-    public int blurRadius = 1;
-
-    public float BilaterFilterFactor = 0;
-    public float randomBias;
-
-    public bool isOnlyAO;
-    enum PassName
-    {
-        AOPass,
-        BlurPass,
-        CombilePass
+        aoMat = new Material(aoShader);
+        Camera.main.depthTextureMode |= DepthTextureMode.DepthNormals;
+        //Debug.Log(8>>1);
     }
     
-    private void OnEnable()
-    {
-        Cam.depthTextureMode |= DepthTextureMode.DepthNormals;
-    }
-
-    private void OnDisable()
-    {
-        Cam.depthTextureMode &= ~ DepthTextureMode.DepthNormals;
-    }
-
-    private void CreatSampleKernel(int num)
-    {
-        if (sampleKernelPosList.Count == sampleKernelCount)
-        {
-            return;
-        }
-        sampleKernelPosList.Clear();
-        for (int i = 0; i < num; i++)
-        {
-            Vector4 sample = new Vector4(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), 1);
-            sample.Normalize();//不会生成新的向量
-            float scale = 1.0f / num;
-            scale = Mathf.Lerp(0.01f, 1.0f, scale*scale);
-            sample *= scale;
-            sampleKernelPosList.Add(sample);
-        }
-    }
     private void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        if (Mate)
+        if (aoMat && !aoOnly)
         {
-            CreatSampleKernel(sampleKernelCount);
-            Mate.SetFloat("_sampleKernelRadius",sampleKernelRadius);
-            Mate.SetFloat("_sampleKernelCount",sampleKernelCount);
-            Mate.SetVectorArray("_sampleKernelPosList",sampleKernelPosList.ToArray());
-            Mate.SetFloat("_AOStrength",AOStrength);
-            Mate.SetFloat("_randomBias",randomBias);
-            Mate.SetFloat("_BilaterFilterFactor",BilaterFilterFactor);
-            Mate.SetMatrix("_InverseProjectMatrix",Cam.projectionMatrix.inverse);
-            RenderTexture AOTex = RenderTexture.GetTemporary(Screen.width/dowmSample,Screen.height/dowmSample);
-            Graphics.Blit(src,AOTex,Mate,(int)PassName.AOPass);
-            RenderTexture BlurTex = RenderTexture.GetTemporary(Screen.width/dowmSample,Screen.height/dowmSample);
-            Mate.SetVector("_blurRadius",new Vector4(blurRadius,0,0,0));
-            Graphics.Blit(AOTex,BlurTex,Mate,(int)PassName.BlurPass);
-            Mate.SetVector("_blurRadius",new Vector4(0,blurRadius,0,0));
-            Graphics.Blit(BlurTex,AOTex,Mate,(int)PassName.BlurPass);
-            if (isOnlyAO)
+            int rtW = src.width;// >> dowmSample;
+            int rtH = src.height;// >> dowmSample;
+            RenderTexture buffer0 = RenderTexture.GetTemporary(rtW,rtH,0,src.format);
+            aoMat.SetFloat("_SampleCount",samplerCount);
+            aoMat.SetFloat("_AoRadius",aoRadius);
+            aoMat.SetFloat("_AoStrange",aoStrange);
+            aoMat.SetVector("_aoColor",aoColor);
+            //ao计算
+            Graphics.Blit(src,buffer0,aoMat,0);
+            
+            aoMat.SetTexture("_AoTex",buffer0);
+
+            if (aoOnly)
             {
-                Graphics.Blit(BlurTex,dest,Mate,(int)PassName.BlurPass);
-            }
-            else
-            {
-                Mate.SetTexture("_AOTex",AOTex);
-                Graphics.Blit(src,dest,Mate,(int)PassName.CombilePass);
+                Graphics.Blit(buffer0,dest,aoMat,0);
             }
             
-            RenderTexture.ReleaseTemporary(AOTex);
-            RenderTexture.ReleaseTemporary(BlurTex);
+            //ao合并
+            Graphics.Blit(buffer0,dest,aoMat,1);
+            
+            //RenderTexture.ReleaseTemporary(buffer1);
+            RenderTexture.ReleaseTemporary(buffer0);
+
         }
         else
         {
             Graphics.Blit(src,dest);
         }
+
     }
 }

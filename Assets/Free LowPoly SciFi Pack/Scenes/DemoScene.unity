@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1680906811}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667555, g: 0.48427182, b: 0.5645241, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 1944950752}
   - component: {fileID: 1944950750}
   - component: {fileID: 1944950749}
+  - component: {fileID: 1944950751}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -292,6 +293,27 @@ Behaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1944950748}
   m_Enabled: 1
+--- !u!114 &1944950751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944950748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d4c282876fb847c3a42a8d8903d943b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aoShader: {fileID: 4800000, guid: fb5f50ceefaf648f7816e0a780092f2a, type: 3}
+  samplerCount: 8
+  aoRadius: 0.57
+  aoStrange: 0.7
+  aoColor: {r: 1, g: 0.18396229, b: 0.18396229, a: 1}
+  aoOnly: 0
+  dowmSample: 1
+  iterator: 1
+  BlurSp: 1.1
 --- !u!20 &1944950752
 Camera:
   m_ObjectHideFlags: 0
@@ -342,8 +364,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1944950748}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.91, y: 1, z: -33.53}
+  m_LocalRotation: {x: 0.06196097, y: -0.88251585, z: 0.12149616, w: 0.45007274}
+  m_LocalPosition: {x: 2.2731705, y: 1.9933825, z: -7.625803}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
