@@ -344,15 +344,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: a12cf8a79b1a34d9c9cdbb0ef299fb9d, type: 3}
   lightTransform: {fileID: 1097858807}
+  targetCamera: {fileID: 1180154615}
   thresholdCol: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 1}
-  lightCol: {r: 0.16540584, g: 0.24355346, b: 0.5943396, a: 1}
-  lightRadius: 1.55
-  lightFactor: 0.73
-  PowFactor: 1
+  lightCol: {r: 0.69272476, g: 0.3137255, b: 0.7176471, a: 1}
+  lightRadius: 1.03
+  lightFactor: 2.66
+  PowFactor: 2.09
   iterator: 2
   downSample: 2
-  samplerScale: 3.9
-  targetCamera: {fileID: 1180154615}
+  samplerScale: 3.3
+  blurSpeard: 5
 --- !u!1 &1433832425
 GameObject:
   m_ObjectHideFlags: 0

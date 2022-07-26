@@ -13,6 +13,8 @@ public class GodRay : MonoBehaviour
     
     public Transform lightTransform;
     
+    public Camera targetCamera;
+    
     public Color thresholdCol = Color.grey;
     public Color lightCol = Color.white;
     [Range(0.1f,3)]
@@ -27,8 +29,9 @@ public class GodRay : MonoBehaviour
     [Range(1,4)] public int downSample = 2;
     //方向模糊偏移量
     [Range(0.0f, 10.0f)] public float samplerScale = 1;
+    [Range(0, 5)] public float blurSpeard;
 
-    public Camera targetCamera;
+
     
     
     // Start is called before the first frame update
@@ -63,6 +66,7 @@ public class GodRay : MonoBehaviour
             for (int i = 0; i < iterator; i++)
             {
                 RenderTexture RT1 = RenderTexture.GetTemporary(rtW,rtH,0,src.format);
+                _mat.SetFloat("_BlurSpeard",1+i+blurSpeard);
                 float offset = samplerOffset * (i * 2 + 1);
                 _mat.SetVector("_Offset",new Vector2(offset,offset));
                 Graphics.Blit(RT0,RT1,_mat,1);

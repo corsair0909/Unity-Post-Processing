@@ -16,6 +16,7 @@ Shader "Unlit/GodRay"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                float2 blurOffset : TEXCOORD1;
             };
         
 
@@ -30,6 +31,7 @@ Shader "Unlit/GodRay"
             float _LightFactor;
             float _PowFactor;
             float2 _Offset;
+            float _BlurSpeard;
         
 
             v2fLum vertLum (appdata_img v)
@@ -57,6 +59,7 @@ Shader "Unlit/GodRay"
                 v2fBlur o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
+                o.blurOffset = _Offset * (_LightPos.xy - v.texcoord) * _BlurSpeard;
                 return o;
             }
             float4 fragBlur (v2fBlur i) : SV_Target
@@ -67,7 +70,7 @@ Shader "Unlit/GodRay"
                 {
                     col += tex2D(_MainTex,uv);
                     //UV的偏移值 = 偏移像素*方向
-                    uv.xy += _Offset * (_LightPos.xy - i.uv);
+                    uv.xy += i.blurOffset;
                 }
                 return col/6;
             }
