@@ -10,10 +10,10 @@ Shader "Custom/TVDistortion"
 		_DistortionFrequency("Distortion Frequency", Float) = 1
 		_DistortionAmplitude("Distortion Amplitude", Range(0, 1)) = 1
 		_DistortionAnmSpeed("Distortion Animation Speed", Float) = 1
-		_ColorScatterStrength("Color Scatter Strength", Range(-0.1, 0.1)) = 0.01
+		_ColorScatterStrength("Color Scatter Strength（通道分离）", Range(-0.1, 0.1)) = 0.01
 		_NoiseTex("Noise Tex (RGB)", 2D) = "black" { }
-		_NoiseAnmSpeed("Noise Animation Speed", Float) = 1
-		_NoiseStrength("Noise Strength", Float) = 1
+		_NoiseAnmSpeed("Noise Animation Speed（噪音抖动速度）", Float) = 1
+		_NoiseStrength("Noise Strength(雪花点强度)", Float) = 1
 	}
  
 	SubShader
