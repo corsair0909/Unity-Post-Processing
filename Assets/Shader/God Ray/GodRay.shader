@@ -4,54 +4,127 @@ Shader "Unlit/GodRay"
     {
         _MainTex ("Texture", 2D) = "white" {}
     }
-    SubShader
-    {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
-
-        Pass
-        {
-            CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
+           CGINCLUDE
 
             #include "UnityCG.cginc"
-
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            struct v2f
+            struct v2fLum
             {
                 float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
+            struct v2fBlur
+            {
+                float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
+            };
+        
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            sampler2D _BlurTex;
 
-            v2f vert (appdata v)
+            float3 _LightPos;
+            half4 _ThresholdCol;
+            half4 _LightCol;
+            float _LightRadius;
+            float _LightFactor;
+            float _PowFactor;
+            float2 _Offset;
+        
+
+            v2fLum vertLum (appdata_img v)
             {
-                v2f o;
+                v2fLum o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
+                o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 fragLum (v2fLum i) : SV_Target
             {
-                // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
-                // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, col);
-                return col;
+                half4 col = tex2D(_MainTex, i.uv);
+                float LightDistance = length(_LightPos.xy - i.uv);
+                float LightControl = saturate(_LightRadius - LightDistance);
+                //根据距离控制颜色亮度
+                half4 DistanceCol = saturate(col - _ThresholdCol) * LightControl;
+                half ColGrayVal = Luminance(DistanceCol.rgb);
+                ColGrayVal = pow(ColGrayVal,_PowFactor);
+                return float4(ColGrayVal,ColGrayVal,ColGrayVal,1);
             }
+
+            v2fBlur vertBlur (appdata_img v)
+            {
+                v2fBlur o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
+                return o;
+            }
+            float4 fragBlur (v2fBlur i) : SV_Target
+            {
+                float2 uv = i.uv;
+                half4 col = half4(0,0,0,0);
+                for (int it = 0; it < 6; ++it)
+                {
+                    col += tex2D(_MainTex,uv);
+                    //UV的偏移值 = 偏移像素*方向
+                    uv.xy += _Offset * (_LightPos.xy - i.uv);
+                }
+                return col/6;
+            }
+
+            struct v2fCombine
+            {
+                float4 vertex : SV_POSITION;
+                float4 uv : TEXCOORD;
+            };
+
+            v2fCombine vertCombine (appdata_img v)
+            {
+                v2fCombine o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv.xy = v.texcoord;
+                o.uv.zw = v.texcoord;
+                return o;
+            }
+            float4 fragCombine (v2fCombine i) : SV_Target
+            {
+                half4 MainCol = tex2D(_MainTex,i.uv.xy);
+                half4 BlurCol = tex2D(_BlurTex,i.uv.zw);
+                return MainCol + _LightFactor * BlurCol * _LightCol;
+            }
+        ENDCG
+
+    SubShader
+    {
+        Cull Off
+        ZTest Always
+        ZWrite Off
+        
+        Tags { "RenderType"="Opaque" }
+        LOD 100
+ 
+        Pass
+        {
+            //亮度提取
+            CGPROGRAM
+            #pragma vertex vertLum
+            #pragma fragment fragLum
+            ENDCG
+        }
+        Pass
+        {
+            //亮度提取
+            CGPROGRAM
+            #pragma vertex vertBlur
+            #pragma fragment fragBlur
+            ENDCG
+        }
+        Pass
+        {
+            //亮度提取
+            CGPROGRAM
+            #pragma vertex vertCombine
+            #pragma fragment fragCombine
             ENDCG
         }
     }
