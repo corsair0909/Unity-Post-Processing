@@ -12,6 +12,13 @@ Bloom =提取较亮部像素 + 模糊 + 叠加。需要RenderTexture保存临时
 #### 2、计算公式
 像素亮度取决于RGB三个通道的贡献值  
 L = Color.r * 0.2125 + Color.g * 0.7154 + Color.b * 0.0721
+### Bloom扩展 GodRay   
+<img width="1283" alt="截屏2022-07-26 11 59 57" src="https://user-images.githubusercontent.com/49482455/181155176-846d6ab4-9fca-434f-81dd-128aca6ed704.png">
+
+
+<img width="1283" alt="截屏2022-07-26 11 59 48" src="https://user-images.githubusercontent.com/49482455/181155185-6ea0cd9d-3470-44a1-b1e4-9dc30a919166.png">
+
+
 ### 参考链接
 [Unity Shader - Bloom(光晕、泛光)](https://developer.unity.cn/projects/5ebca6b0edbc2a00200fb9ef)
 
