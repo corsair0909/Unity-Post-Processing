@@ -155,7 +155,7 @@ NDC = (uv,Depth * 2 - 1)
 3、波浪影响位置计算图下图所示，求出所有uv坐标点距离开始点的距离（插值得到所有uv坐标，勾股定理求的距离），当前距离-uv距离<波浪宽度说明要收到波浪影响，
 ![IMG_1147](https://user-images.githubusercontent.com/49482455/173620449-dd525536-ebac-43bf-8cbf-acadb79ad0d4.png)
 
-## SSAO(还有bug，正在学习修改)    
+## [SSAO](https://github.com/corsair0909/Unity-Post-Processing/tree/main/Assets/Shader/SSAO)   
     
 <img width="1283" alt="截屏2022-07-26 18 19 00" src="https://user-images.githubusercontent.com/49482455/181150645-78b87c99-f817-44db-bdfc-b479be377f14.png">    
 
